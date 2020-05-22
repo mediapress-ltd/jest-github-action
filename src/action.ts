@@ -93,6 +93,7 @@ export function getCoverageTable(
   }
   const covMap = createCoverageMap((results.coverageMap as unknown) as CoverageMapData)
   const rows = [["Filename", "Statements", "Branches", "Functions", "Lines"]]
+  const title = "Click to see test coverage"
 
   if (!Object.keys(covMap.data).length) {
     console.error("No entries found in coverage data")
@@ -102,7 +103,7 @@ export function getCoverageTable(
   for (const [filename, data] of Object.entries(covMap.data || {})) {
     const { data: summary } = data.toSummary()
     rows.push([
-      filename.replace(cwd, ""),
+      `\`${filename.replace(cwd, "")}\``,
       summary.statements.pct + "%",
       summary.branches.pct + "%",
       summary.functions.pct + "%",
@@ -110,7 +111,10 @@ export function getCoverageTable(
     ])
   }
 
-  return COVERAGE_HEADER + table(rows, { align: ["l", "r", "r", "r", "r"] })
+  return (
+    COVERAGE_HEADER +
+    asDetailsSummary(title, table(rows, { align: ["l", "r", "r", "r", "r"] }))
+  )
 }
 
 function getCommentPayload(body: string) {
@@ -212,4 +216,8 @@ const getOutputText = (results: FormattedTestResults) => {
 
 export function asMarkdownCode(str: string) {
   return "```\n" + str.trimRight() + "\n```"
+}
+
+export function asDetailsSummary(title: string, str: string) {
+  return `<details><summary>${title}</summary>\n${str}</details>\n`
 }
