@@ -219,5 +219,5 @@ export function asMarkdownCode(str: string) {
 }
 
 export function asDetailsSummary(title: string, str: string) {
-  return `<details><summary>${title}</summary>\n${str}\n</details>\n`
+  return `<details><summary>${title}</summary>\n\n${str}\n</details>\n`
 }
